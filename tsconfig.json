@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["@remix-run/cloudflare", "vite/client", "@cloudflare/workers-types/2023-07-01"],
+    "types": [
+      "vite/client",
+      "@cloudflare/workers-types/2023-07-01",
+      "@remix-run/cloudflare"
+    ],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -17,17 +21,17 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./app/*"]
-    },
-
-    // vite takes care of building everything, not tsc
-    "noEmit": true
+    }
   },
   "include": [
+    "vite-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/.server/**/*.ts",
-    "**/.server/**/*.tsx",
-    "**/.client/**/*.ts",
-    "**/.client/**/*.tsx"
+    "./*.ts",
+    "./*.tsx",
+    ".server/**/*.ts",
+    ".server/**/*.tsx",
+    ".client/**/*.ts",
+    ".client/**/*.tsx"
   ]
 }

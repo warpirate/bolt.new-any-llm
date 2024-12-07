@@ -28,11 +28,7 @@ const PROVIDER_LIST: ProviderInfo[] = [
     getApiKeyLink: "https://ollama.com/download",
     labelForGetApiKey: "Download Ollama",
     icon: "i-ph:cloud-arrow-down",
-  }, {
-    name: 'OpenAILike',
-    staticModels: [],
-    getDynamicModels: getOpenAILikeModels
-  },
+  }, 
   {
     name: 'OpenRouter',
     staticModels: [
@@ -93,6 +89,12 @@ const PROVIDER_LIST: ProviderInfo[] = [
     ],
     getApiKeyLink: "https://platform.openai.com/api-keys",
   }, {
+    name: 'Nebius',
+    staticModels: [
+      { name: 'Qwen/Qwen2.5-Coder-32B-Instruct', label: 'Qwen 2.5 Coder 32B', provider: 'Nebius' }
+    ],
+    getApiKeyLink: "https://console.nebius.ai/",
+  },{
     name: 'xAI',
     staticModels: [
       { name: 'grok-beta', label: 'xAI Grok Beta', provider: 'xAI' }
@@ -119,13 +121,6 @@ const PROVIDER_LIST: ProviderInfo[] = [
       { name: 'mistral-large-latest', label: 'Mistral Large Latest', provider: 'Mistral' }
     ],
     getApiKeyLink: 'https://console.mistral.ai/api-keys/'
-  }, {
-    name: 'LMStudio',
-    staticModels: [],
-    getDynamicModels: getLMStudioModels,
-    getApiKeyLink: 'https://lmstudio.ai/',
-    labelForGetApiKey: 'Get LMStudio',
-    icon: "i-ph:cloud-arrow-down",
   }
 ];
 
@@ -136,19 +131,12 @@ const staticModels: ModelInfo[] = PROVIDER_LIST.map(p => p.staticModels).flat();
 export let MODEL_LIST: ModelInfo[] = [...staticModels];
 
 const getOllamaBaseUrl = () => {
-  const defaultBaseUrl = import.meta.env.OLLAMA_API_BASE_URL || 'http://localhost:11434';
+  const defaultBaseUrl = 'http://localhost:11434';
   // Check if we're in the browser
   if (typeof window !== 'undefined') {
     // Frontend always uses localhost
     return defaultBaseUrl;
   }
-
-  // Backend: Check if we're running in Docker
-  const isDocker = process.env.RUNNING_IN_DOCKER === 'true';
-
-  return isDocker
-    ? defaultBaseUrl.replace('localhost', 'host.docker.internal')
-    : defaultBaseUrl;
 };
 
 async function getOllamaModels(): Promise<ModelInfo[]> {
@@ -167,28 +155,6 @@ async function getOllamaModels(): Promise<ModelInfo[]> {
   }
 }
 
-async function getOpenAILikeModels(): Promise<ModelInfo[]> {
-  try {
-    const base_url = import.meta.env.OPENAI_LIKE_API_BASE_URL || '';
-    if (!base_url) {
-      return [];
-    }
-    const api_key = import.meta.env.OPENAI_LIKE_API_KEY ?? '';
-    const response = await fetch(`${base_url}/models`, {
-      headers: {
-        Authorization: `Bearer ${api_key}`
-      }
-    });
-    const res = await response.json() as any;
-    return res.data.map((model: any) => ({
-      name: model.id,
-      label: model.id,
-      provider: 'OpenAILike'
-    }));
-  } catch (e) {
-    return [];
-  }
-}
 
 type OpenRouterModelsResponse = {
   data: {
@@ -218,20 +184,6 @@ async function getOpenRouterModels(): Promise<ModelInfo[]> {
   }));
 }
 
-async function getLMStudioModels(): Promise<ModelInfo[]> {
-  try {
-    const base_url = import.meta.env.LMSTUDIO_API_BASE_URL || 'http://localhost:1234';
-    const response = await fetch(`${base_url}/v1/models`);
-    const data = await response.json() as any;
-    return data.data.map((model: any) => ({
-      name: model.id,
-      label: model.id,
-      provider: 'LMStudio'
-    }));
-  } catch (e) {
-    return [];
-  }
-}
 
 
 
@@ -244,4 +196,4 @@ async function initializeModelList(): Promise<ModelInfo[]> {
   return MODEL_LIST;
 }
 
-export { getOllamaModels, getOpenAILikeModels, getLMStudioModels, initializeModelList, getOpenRouterModels, PROVIDER_LIST };
+export { getOllamaModels, initializeModelList, getOpenRouterModels, PROVIDER_LIST };

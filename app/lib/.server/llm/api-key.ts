@@ -30,9 +30,11 @@ export function getAPIKey(cloudflareEnv: Env, provider: string, userApiKeys?: Re
     case 'Deepseek':
       return env.DEEPSEEK_API_KEY || cloudflareEnv.DEEPSEEK_API_KEY
     case 'Mistral':
-      return env.MISTRAL_API_KEY || cloudflareEnv.MISTRAL_API_KEY;        
+      return env.MISTRAL_API_KEY || cloudflareEnv.MISTRAL_API_KEY;
     case "OpenAILike":
       return env.OPENAI_LIKE_API_KEY || cloudflareEnv.OPENAI_LIKE_API_KEY;
+    case "Nebius":
+      return env.NEBIUS_API_KEY || cloudflareEnv.NEBIUS_API_KEY;
     case "xAI":
       return env.XAI_API_KEY || cloudflareEnv.XAI_API_KEY;
     default:
@@ -46,12 +48,14 @@ export function getBaseURL(cloudflareEnv: Env, provider: string) {
       return env.OPENAI_LIKE_API_BASE_URL || cloudflareEnv.OPENAI_LIKE_API_BASE_URL;
     case 'LMStudio':
       return env.LMSTUDIO_API_BASE_URL || cloudflareEnv.LMSTUDIO_API_BASE_URL || "http://localhost:1234";
+    case 'Nebius':
+      return env.NEBIUS_API_BASE_URL || cloudflareEnv.NEBIUS_API_BASE_URL || "https://api.studio.nebius.ai/v1";
     case 'Ollama':
-        let baseUrl = env.OLLAMA_API_BASE_URL || cloudflareEnv.OLLAMA_API_BASE_URL || "http://localhost:11434";
-        if (env.RUNNING_IN_DOCKER === 'true') {
-          baseUrl = baseUrl.replace("localhost", "host.docker.internal");
-        }
-        return baseUrl;
+      let baseUrl = env.OLLAMA_API_BASE_URL || cloudflareEnv.OLLAMA_API_BASE_URL || "http://localhost:11434";
+      if (env.RUNNING_IN_DOCKER === 'true') {
+        baseUrl = baseUrl.replace("localhost", "host.docker.internal");
+      }
+      return baseUrl;
     default:
       return "";
   }

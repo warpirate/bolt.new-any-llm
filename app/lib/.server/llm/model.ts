@@ -15,7 +15,7 @@ export function getAnthropicModel(apiKey: string, model: string) {
 
   return anthropic(model);
 }
-export function getOpenAILikeModel(baseURL:string,apiKey: string, model: string) {
+export function getOpenAILikeModel(baseURL: string, apiKey: string, model: string) {
   const openai = createOpenAI({
     baseURL,
     apiKey,
@@ -74,7 +74,7 @@ export function getOllamaModel(baseURL: string, model: string) {
   return Ollama;
 }
 
-export function getDeepseekModel(apiKey: string, model: string){
+export function getDeepseekModel(apiKey: string, model: string) {
   const openai = createOpenAI({
     baseURL: 'https://api.deepseek.com/beta',
     apiKey,
@@ -117,6 +117,9 @@ export function getModel(provider: string, model: string, env: Env, apiKeys?: Re
       return getAnthropicModel(apiKey, model);
     case 'OpenAI':
       return getOpenAIModel(apiKey, model);
+    case 'Nebius':
+      const nebiusBaseURL = getBaseURL(env, provider);
+      return getOpenAILikeModel(nebiusBaseURL, apiKey, model);
     case 'Groq':
       return getGroqModel(apiKey, model);
     case 'HuggingFace':
@@ -126,11 +129,11 @@ export function getModel(provider: string, model: string, env: Env, apiKeys?: Re
     case 'Google':
       return getGoogleModel(apiKey, model);
     case 'OpenAILike':
-      return getOpenAILikeModel(baseURL,apiKey, model);
+      return getOpenAILikeModel(baseURL, apiKey, model);
     case 'Deepseek':
       return getDeepseekModel(apiKey, model);
     case 'Mistral':
-      return  getMistralModel(apiKey, model);
+      return getMistralModel(apiKey, model);
     case 'LMStudio':
       return getLMStudioModel(baseURL, model);
     case 'xAI':
